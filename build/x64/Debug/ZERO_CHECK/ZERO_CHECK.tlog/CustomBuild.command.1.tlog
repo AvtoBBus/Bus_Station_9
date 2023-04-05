@@ -1,0 +1,10 @@
+^C:\USERS\MISTE\ONEDRIVE\DESKTOP\ВАЖНОЕ\УЧЁБА\ДЛЯ СЕБЯ\BUS_STATION_9\BUILD\CMAKEFILES\6F60F371E79E950C327FD83AC66631BA\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9" "-BC:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/build/lab_1.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
