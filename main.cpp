@@ -87,20 +87,19 @@ void help_add(BinTree<T> *obj, T *first_set, int first_size, T *second_set, int 
 template <class T>
 void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *result_obj, int num_of_task)
 {
-    int first_size = node_count(first_obj->get_root()), second_size = node_count(second_obj->get_root());
-    int res_size = first_size + second_size;
+    int first_size = node_count(&first_obj->get_root()), second_size = node_count(&second_obj->get_root());
     T *first_set, *second_set;
     if (first_size)
     {
         int index = 0;
         first_set = new T[first_size];
-        add_to_set<T>(first_obj->get_root(), first_set, index);
+        add_to_set<T>(&first_obj->get_root(), first_set, index);
     }
     if (second_size)
     {
         int index = 0;
         second_set = new T[second_size];
-        add_to_set<T>(second_obj->get_root(), second_set, index);
+        add_to_set<T>(&second_obj->get_root(), second_set, index);
     }
     if (num_of_task == 1)
     {
@@ -111,38 +110,44 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
     }
     else
     {
-        int index = 0;
+        int help_index = 0, res_index = 0;
         BinTree<T> help_obj;
-        T *res_set = new T[res_size];
-        T *help_set = new T[res_size];
-
         help_add(&help_obj, first_set, first_size, second_set, second_size);
-        add_to_set(help_obj.get_root(), res_set, index);
-        index = 0;
+        T *res_set = new T[node_count(&help_obj.get_root())];
+        T *help_set = new T[node_count(&help_obj.get_root())];
+        add_to_set(&help_obj.get_root(), res_set, res_index);
+
+        for (int i = 0; i < res_index; i++)
+            cout << res_set[i] << endl;
+        cout << "=====" << endl;
+
+        help_index = 0;
         for (int i = 0; i < first_size; i++)
         {
             for (int j = 0; j < second_size; j++)
             {
                 if (first_set[i] == second_set[j])
                 {
-                    help_set[index] = first_set[i];
-                    index++;
+                    help_set[help_index] = first_set[i];
+                    help_index++;
                 }
             }
         }
-        for (int i = 0; i < index; i++)
+        for (int i = 0; i < help_index; i++)
         {
-            for (int j = 0; j < res_size; j++)
+            cout << help_set[i] << endl;
+            for (int j = 0; j < res_index; j++)
             {
                 if (help_set[i] == res_set[j])
                 {
-                    res_set[j] = (T)9999999;
+                    res_set[j] = (T)999999999;
                 }
             }
         }
-        for (int i = 0; i < index; i++)
+        cout << "=====" << endl;
+        for (int i = 0; i < res_index; i++)
         {
-            if (res_set[i] != (T)9999999)
+            if (res_set[i] != (T)999999999)
                 result_obj->insert(res_set[i]);
         }
     }
@@ -171,29 +176,30 @@ void second_level_menu()
         BinTree<T> result_tree;
         cout << endl
              << "=======FIRST TREE=======" << endl;
-        first_tree.print(first_tree.get_root(), 0, 0);
+        first_tree.print(&first_tree.get_root(), 0, 0);
 
         cout << endl
              << "=======SECOND TREE=======" << endl;
-        second_tree.print(second_tree.get_root(), 0, 0);
+        second_tree.print(&second_tree.get_root(), 0, 0);
 
         cout << endl
              << "Key Button || FUNCTION" << endl;
         cout << "=======================" << endl;
         cout << "    [Q]    ||   INSERT ROOT" << endl;
         cout << "    [W]    ||   FILL WITH RANDOM NUMBER" << endl;
-        if (first_tree.get_root() || second_tree.get_root())
+        if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [E]    ||   ERASE 1 ROOT " << endl;
-        if (first_tree.get_root() || second_tree.get_root())
+        if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [A]    ||   CLEAR FULL TREE" << endl;
-        if (first_tree.get_root() || second_tree.get_root())
+        if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [S]    ||   DOING TASK" << endl;
-        if (first_tree.get_root() || second_tree.get_root())
+        if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [D]    ||   START ALL TEST" << endl;
         cout << "   [Esc]   || I don't wanna " << endl;
         int key = _getch();
         // cout << key;
         // system("pause");
+        Node<T> *help_root;
         switch (key)
         {
         case 113: // q
@@ -211,16 +217,24 @@ void second_level_menu()
             break;
         case 115: // s
             cout << endl;
-            // doing_task<T>(&first_tree, &second_tree, &result_tree, 1);
-            // result_tree.print(result_tree.get_root(), 0, 0);
-            // system("pause");
+            system("cls");
+            doing_task<T>(&first_tree, &second_tree, &result_tree, 1);
+            result_tree.print(&result_tree.get_root(), 0, 0);
+            system("pause");
+            help_root = &result_tree.get_root();
+            result_tree.clear(&help_root);
+            result_tree.set_root(help_root);
             doing_task<T>(&first_tree, &second_tree, &result_tree, 2);
-            result_tree.print(result_tree.get_root(), 0, 0);
+            result_tree.print(&result_tree.get_root(), 0, 0);
             system("pause");
             break;
         case 27: // esc
-            first_tree.clear(first_tree.get_root());
-            second_tree.clear(second_tree.get_root());
+            help_root = &first_tree.get_root();
+            first_tree.clear(&help_root);
+            first_tree.set_root(help_root);
+            help_root = &second_tree.get_root();
+            second_tree.clear(&help_root);
+            second_tree.set_root(help_root);
             return;
         }
         input = T(0);

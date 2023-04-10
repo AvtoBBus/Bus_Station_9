@@ -37,22 +37,32 @@ BinTree<T>::BinTree(const BinTree &obj)
 }
 
 template <class T>
-Node<T> *BinTree<T>::get_root()
+Node<T> &BinTree<T>::get_root()
 {
-    return this->root;
+    return *(this->root);
 }
 
 template <class T>
-void BinTree<T>::clear(Node<T> *root)
+void BinTree<T>::set_root(Node<T> *root)
 {
-    if (root)
+    this->root = root;
+}
+
+template <class T>
+void BinTree<T>::clear(Node<T> **root)
+{
+    if ((*root))
     {
-        if (root->left)
-            clear(root->left);
-        if (root->right)
-            clear(root->right);
-        delete root;
+        if ((*root)->left)
+            clear(&((*root)->left));
+        (*root)->left = nullptr;
+        if ((*root)->right)
+            clear(&((*root)->right));
+        (*root)->right = nullptr;
+        delete (*root);
+        (*root) = nullptr;
     }
+    (*root) = nullptr;
 }
 
 template <class T>
@@ -205,7 +215,7 @@ template <class T>
 BinTree<T>::~BinTree()
 {
     if (root)
-        clear(root);
+        clear(&root);
 }
 
 template struct Node<int>;
