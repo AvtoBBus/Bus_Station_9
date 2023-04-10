@@ -45,12 +45,14 @@ Node<T> *BinTree<T>::get_root()
 template <class T>
 void BinTree<T>::clear(Node<T> *root)
 {
-    if (root->left)
-        clear(root->left);
-    if (root->right)
-        clear(root->right);
-    delete root;
-    root = nullptr;
+    if (root)
+    {
+        if (root->left)
+            clear(root->left);
+        if (root->right)
+            clear(root->right);
+        delete root;
+    }
 }
 
 template <class T>
