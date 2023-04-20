@@ -1,11 +1,14 @@
 #include <iostream>
+#include <sstream>
 #include <conio.h>
 #include <time.h>
 #include <stdlib.h>
 #include <time.h>
+#include <chrono>
 #include "BinTree.h"
 
 using namespace std;
+using namespace chrono;
 
 void third_level_menu(int *choose)
 {
@@ -117,10 +120,6 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
         T *help_set = new T[node_count(&help_obj.get_root())];
         add_to_set(&help_obj.get_root(), res_set, res_index);
 
-        for (int i = 0; i < res_index; i++)
-            cout << res_set[i] << endl;
-        cout << "=====" << endl;
-
         help_index = 0;
         for (int i = 0; i < first_size; i++)
         {
@@ -135,7 +134,6 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
         }
         for (int i = 0; i < help_index; i++)
         {
-            cout << help_set[i] << endl;
             for (int j = 0; j < res_index; j++)
             {
                 if (help_set[i] == res_set[j])
@@ -144,7 +142,6 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
                 }
             }
         }
-        cout << "=====" << endl;
         for (int i = 0; i < res_index; i++)
         {
             if (res_set[i] != (T)999999999)
@@ -156,10 +153,103 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
 template <class T>
 void input_data(T *data)
 {
-    while ((*data) == T(0))
+    while ((*data) < T(0))
     {
         cout << "Input data -> ";
         cin >> (*data);
+    }
+}
+
+size_t randomaizer()
+{
+    time_t rawtime;
+    struct tm *timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    static size_t x = (timeinfo->tm_sec + timeinfo->tm_hour + timeinfo->tm_min) / 3;
+    x = (1021 * x + 24631) % 116640;
+    return x;
+}
+
+template <class T>
+T get_random_root_data(BinTree<T> *obj, int size)
+{
+    T *set = new T[size];
+    int index = 0;
+    add_to_set(&obj->get_root(), set, index);
+    index = rand() % size;
+    return set[index];
+}
+
+template <class T>
+void all_test(BinTree<T> *obj, int num_of_test)
+{
+
+    for (int count = 100; count <= 10000; count += 300)
+    {
+        duration<float> result;
+        string filename;
+        if (num_of_test == 1)
+        {
+            auto start = high_resolution_clock::now();
+            for (int i = 0; i < count; i++)
+            {
+                bool append = false;
+                while (!append)
+                    append = obj->insert(randomaizer());
+            }
+            auto end = high_resolution_clock::now();
+            result = end - start;
+            filename += "Node_fill.txt";
+        }
+        if (num_of_test == 2)
+        {
+            for (int i = 0; i < count; i++)
+                obj->insert(randomaizer());
+            auto start = high_resolution_clock::now();
+            for (int i = 0; i < count; i++)
+            {
+                bool find = false;
+                while (!find)
+                    find = obj->search(randomaizer());
+            }
+            auto end = high_resolution_clock::now();
+            result = end - start;
+            filename += "Node_search.txt";
+        }
+        if (num_of_test == 3)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                bool append = false;
+                while (!append)
+                    append = obj->insert(randomaizer());
+            }
+            auto start = high_resolution_clock::now();
+            bool doit = false;
+            while (!doit)
+                doit = obj->insert(randomaizer());
+            T data_to_delete = get_random_root_data(obj, count);
+            obj->erase(data_to_delete);
+            auto end = high_resolution_clock::now();
+            filename += "Node_insert_erase.txt";
+        }
+
+        FILE *file = fopen(filename.c_str(), "a");
+        stringstream ss;
+        ss << count;
+        ss << ";";
+        ss << result.count() / count;
+        ss << "\n";
+        string str_to_write = ss.str();
+        if (file)
+        {
+            fputs(str_to_write.c_str(), file);
+            fclose(file);
+        }
+        Node<T> *help_root = &obj->get_root();
+        obj->clear(&help_root);
+        obj->set_root(help_root);
     }
 }
 
@@ -196,7 +286,7 @@ void second_level_menu()
         if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [D]    ||   START ALL TEST" << endl;
         cout << "   [Esc]   || I don't wanna " << endl;
-        int key = _getch();
+        int key = 100;
         // cout << key;
         // system("pause");
         Node<T> *help_root;
@@ -213,20 +303,107 @@ void second_level_menu()
         case 119: // w
             random_fill(&first_tree, &second_tree);
             break;
-        case 101:
+        case 101: // e
+            if (&first_tree.get_root() || &second_tree.get_root())
+            {
+                third_level_menu(&choose);
+                input_data<T>(&input);
+                if (choose == 1)
+                {
+                    try
+                    {
+                        first_tree.erase(input);
+                    }
+                    catch (const char *error)
+                    {
+                        cout << error << endl;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        second_tree.erase(input);
+                    }
+                    catch (const char *error)
+                    {
+                        cout << error << endl;
+                    }
+                }
+                system("pause");
+            }
+            break;
+        case 97: // a
+            if (&first_tree.get_root() || &second_tree.get_root())
+            {
+                help_root = &first_tree.get_root();
+                first_tree.clear(&help_root);
+                first_tree.set_root(help_root);
+                help_root = &second_tree.get_root();
+                second_tree.clear(&help_root);
+                second_tree.set_root(help_root);
+            }
             break;
         case 115: // s
-            cout << endl;
-            system("cls");
-            doing_task<T>(&first_tree, &second_tree, &result_tree, 1);
-            result_tree.print(&result_tree.get_root(), 0, 0);
-            system("pause");
-            help_root = &result_tree.get_root();
-            result_tree.clear(&help_root);
-            result_tree.set_root(help_root);
-            doing_task<T>(&first_tree, &second_tree, &result_tree, 2);
-            result_tree.print(&result_tree.get_root(), 0, 0);
-            system("pause");
+            if (&first_tree.get_root() || &second_tree.get_root())
+            {
+                do
+                {
+                    system("cls");
+                    cout << "======CHANGE TASK=====" << endl;
+                    cout << endl
+                         << "Key Button || FUNCTION" << endl;
+                    cout << "=======================" << endl;
+                    cout << "    [Q]    ||   FIND UNITY" << endl;
+                    cout << "    [W]    ||   FIND SIMMETRIC DIV" << endl;
+                    key = _getch();
+                } while (key != 113 && key != 119);
+                cout << endl
+                     << "RESULT:" << endl;
+                if (key == 113)
+                {
+                    doing_task<T>(&first_tree, &second_tree, &result_tree, 1);
+                }
+                else
+                {
+                    doing_task<T>(&first_tree, &second_tree, &result_tree, 2);
+                }
+                result_tree.print(&result_tree.get_root(), 0, 0);
+                system("pause");
+            }
+            break;
+        case 100: // d
+            random_fill(&first_tree, &second_tree);
+            if (&first_tree.get_root() || &second_tree.get_root())
+            {
+                help_root = &first_tree.get_root();
+                first_tree.clear(&help_root);
+                first_tree.set_root(help_root);
+
+                // cout << "===Test 1 Start===";
+                // auto start = high_resolution_clock::now();
+                // all_test(&first_tree, 1);
+                // auto end = high_resolution_clock::now();
+                // duration<float> result = end - start;
+                // cout << result.count() << "=====Complete=====" << endl;
+
+                // cout << endl
+                //      << "===Test 2 Start===";
+                // start = high_resolution_clock::now();
+                // all_test(&first_tree, 2);
+                // end = high_resolution_clock::now();
+                // result = end - start;
+                // cout << result.count() << "=====Complete=====" << endl;
+
+                cout << endl
+                     << "===Test 3 Start===";
+                auto start = high_resolution_clock::now();
+                all_test(&first_tree, 3);
+                auto end = high_resolution_clock::now();
+                duration<float> result = end - start;
+                cout << result.count() << "=====Complete=====" << endl;
+                system("pause");
+            }
             break;
         case 27: // esc
             help_root = &first_tree.get_root();
@@ -255,7 +432,7 @@ int main()
         cout << "    [W]    ||   FLOAT  " << endl;
         cout << "    [E]    ||   DOUBLE " << endl;
         cout << "   [Esc]   || I don't wanna " << endl;
-        int key = _getch();
+        int key = 113;
         switch (key)
         {
         case 113:

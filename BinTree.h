@@ -35,7 +35,7 @@ public:
     Node<T> &get_root();
     void set_root(Node<T> *root);
     void clear(Node<T> **root);
-    void insert(T data);
+    bool insert(T data);
     void print(Node<T> *root, int side, int level);
     Node<T> *search(T data);
     bool contains(const Node<T> *obj);

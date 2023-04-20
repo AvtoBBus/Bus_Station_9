@@ -66,12 +66,12 @@ void BinTree<T>::clear(Node<T> **root)
 }
 
 template <class T>
-void BinTree<T>::insert(T data)
+bool BinTree<T>::insert(T data)
 {
     if (!root)
     {
         root = new Node<T>(data);
-        return;
+        return true;
     }
     Node<T> *tmp = root;
     tmp->prev = nullptr;
@@ -79,7 +79,7 @@ void BinTree<T>::insert(T data)
     while (tmp)
     {
         if (tmp->data == data)
-            return;
+            return false;
         if (tmp->data < data)
         {
             if (tmp->right)
@@ -87,7 +87,7 @@ void BinTree<T>::insert(T data)
             else
             {
                 tmp->right = new Node<T>(data, tmp);
-                return;
+                return true;
             }
         }
         if (tmp->data > data)
@@ -97,7 +97,7 @@ void BinTree<T>::insert(T data)
             else
             {
                 tmp->left = new Node<T>(data, tmp);
-                return;
+                return true;
             }
         }
     }
@@ -132,10 +132,17 @@ Node<T> *BinTree<T>::search(T data)
     {
         if (tmp->data == data)
             return tmp;
-        else if (tmp->data < data)
-            tmp = tmp->right;
+
         else
-            tmp = tmp->right;
+        {
+            if (tmp->data < data)
+                tmp = tmp->right;
+            else
+            {
+                if (tmp->data > data)
+                    tmp = tmp->left;
+            }
+        }
     }
     return nullptr;
 }
@@ -152,7 +159,7 @@ void BinTree<T>::erase(T data)
     if (!root)
         throw "Error, empty tree";
     if (!search(data))
-        throw "Error, incorrect index";
+        throw "Error, incorrect data";
 
     Node<T> *node_to_delete = search(data);
     Node<T> *min_in_right_side = find_min_in_right(node_to_delete->right);
