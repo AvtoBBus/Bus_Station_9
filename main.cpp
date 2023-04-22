@@ -24,14 +24,14 @@ void third_level_menu(int *choose)
 template <class T>
 int node_count(Node<T> *root)
 {
-    if (root->left == NULL && root->right == NULL)
+    if (root->left == nullptr && root->right == nullptr)
         return 1;
     int left, right;
-    if (root->left != NULL)
+    if (root->left != nullptr)
         left = node_count(root->left);
     else
         left = 0;
-    if (root->right != NULL)
+    if (root->right != nullptr)
         right = node_count(root->right);
     else
         right = 0;
@@ -47,7 +47,7 @@ void insert_root(BinTree<T> *obj, T data)
 template <class T>
 void random_fill(BinTree<T> *first_obj, BinTree<T> *second_obj)
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     int num_of_cells = rand() % 10 + 3;
     time_t rawtime;
     struct tm *timeinfo;
@@ -150,16 +150,6 @@ void doing_task(BinTree<T> *first_obj, BinTree<T> *second_obj, BinTree<T> *resul
     }
 }
 
-template <class T>
-void input_data(T *data)
-{
-    while ((*data) < T(0))
-    {
-        cout << "Input data -> ";
-        cin >> (*data);
-    }
-}
-
 size_t randomaizer()
 {
     time_t rawtime;
@@ -239,7 +229,7 @@ void all_test(BinTree<T> *obj, int num_of_test)
         stringstream ss;
         ss << count;
         ss << ";";
-        ss << result.count() / count;
+        ss << abs(result.count() / count);
         ss << "\n";
         string str_to_write = ss.str();
         if (file)
@@ -247,9 +237,16 @@ void all_test(BinTree<T> *obj, int num_of_test)
             fputs(str_to_write.c_str(), file);
             fclose(file);
         }
-        Node<T> *help_root = &obj->get_root();
-        obj->clear(&help_root);
-        obj->set_root(help_root);
+        try
+        {
+            Node<T> *help_root = &obj->get_root();
+            obj->clear(&help_root);
+            obj->set_root(help_root);
+        }
+        catch (const char *er)
+        {
+            cout << er << endl;
+        }
     }
 }
 
@@ -258,7 +255,7 @@ void second_level_menu()
 {
     BinTree<T> first_tree;
     BinTree<T> second_tree;
-    T input = (T)0;
+    T input = (T)-1;
     int choose = 0;
     while (true)
     {
@@ -286,15 +283,17 @@ void second_level_menu()
         if (&first_tree.get_root() || &second_tree.get_root())
             cout << "    [D]    ||   START ALL TEST" << endl;
         cout << "   [Esc]   || I don't wanna " << endl;
-        int key = 100;
-        // cout << key;
-        // system("pause");
+        int key = _getch();
         Node<T> *help_root;
         switch (key)
         {
         case 113: // q
             third_level_menu(&choose);
-            input_data<T>(&input);
+            while (input < T(0))
+            {
+                cout << "Input data -> ";
+                cin >> input;
+            }
             if (choose == 1)
                 insert_root<T>(&first_tree, input);
             else
@@ -307,7 +306,11 @@ void second_level_menu()
             if (&first_tree.get_root() || &second_tree.get_root())
             {
                 third_level_menu(&choose);
-                input_data<T>(&input);
+                while (input < T(0))
+                {
+                    cout << "Input data -> ";
+                    cin >> input;
+                }
                 if (choose == 1)
                 {
                     try
@@ -380,27 +383,27 @@ void second_level_menu()
                 first_tree.clear(&help_root);
                 first_tree.set_root(help_root);
 
-                // cout << "===Test 1 Start===";
-                // auto start = high_resolution_clock::now();
-                // all_test(&first_tree, 1);
-                // auto end = high_resolution_clock::now();
-                // duration<float> result = end - start;
-                // cout << result.count() << "=====Complete=====" << endl;
+                cout << "===Test 1 Start===";
+                auto start = high_resolution_clock::now();
+                all_test(&first_tree, 1);
+                auto end = high_resolution_clock::now();
+                duration<float> result = end - start;
+                cout << result.count() << "=====Complete=====" << endl;
 
-                // cout << endl
-                //      << "===Test 2 Start===";
-                // start = high_resolution_clock::now();
-                // all_test(&first_tree, 2);
-                // end = high_resolution_clock::now();
-                // result = end - start;
-                // cout << result.count() << "=====Complete=====" << endl;
+                cout << endl
+                     << "===Test 2 Start===";
+                start = high_resolution_clock::now();
+                all_test(&first_tree, 2);
+                end = high_resolution_clock::now();
+                result = end - start;
+                cout << result.count() << "=====Complete=====" << endl;
 
                 cout << endl
                      << "===Test 3 Start===";
-                auto start = high_resolution_clock::now();
+                start = high_resolution_clock::now();
                 all_test(&first_tree, 3);
-                auto end = high_resolution_clock::now();
-                duration<float> result = end - start;
+                end = high_resolution_clock::now();
+                result = end - start;
                 cout << result.count() << "=====Complete=====" << endl;
                 system("pause");
             }
@@ -414,7 +417,7 @@ void second_level_menu()
             second_tree.set_root(help_root);
             return;
         }
-        input = T(0);
+        input = T(-1);
         choose = 0;
     }
 }
@@ -432,7 +435,7 @@ int main()
         cout << "    [W]    ||   FLOAT  " << endl;
         cout << "    [E]    ||   DOUBLE " << endl;
         cout << "   [Esc]   || I don't wanna " << endl;
-        int key = 113;
+        int key = _getch();
         switch (key)
         {
         case 113:

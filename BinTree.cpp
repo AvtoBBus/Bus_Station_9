@@ -51,17 +51,11 @@ void BinTree<T>::set_root(Node<T> *root)
 template <class T>
 void BinTree<T>::clear(Node<T> **root)
 {
-    if ((*root))
-    {
-        if ((*root)->left)
-            clear(&((*root)->left));
-        (*root)->left = nullptr;
-        if ((*root)->right)
-            clear(&((*root)->right));
-        (*root)->right = nullptr;
-        delete (*root);
-        (*root) = nullptr;
-    }
+    if ((*root)->left != nullptr)
+        clear(&((*root)->left));
+    if ((*root)->right != nullptr)
+        clear(&((*root)->right));
+    delete (*root);
     (*root) = nullptr;
 }
 
@@ -157,55 +151,83 @@ template <class T>
 void BinTree<T>::erase(T data)
 {
     if (!root)
-        throw "Error, empty tree";
-    if (!search(data))
-        throw "Error, incorrect data";
-
-    Node<T> *node_to_delete = search(data);
-    Node<T> *min_in_right_side = find_min_in_right(node_to_delete->right);
-    if (node_to_delete->left && node_to_delete->right)
+        return;
+    Node<T> *erase_root = search(data);
+    if (erase_root == nullptr)
+        return;
+    if (erase_root == root)
     {
-        node_to_delete->data = min_in_right_side->data;
-        min_in_right_side->prev->left = nullptr;
-        delete min_in_right_side;
-        min_in_right_side = nullptr;
+        if (root->left == nullptr && root->right == nullptr)
+        {
+            root = nullptr;
+            return;
+        }
+        if (erase_root->left != nullptr && erase_root->right == nullptr)
+        {
+            root = root->left;
+            delete erase_root;
+            return;
+        }
+        if (erase_root->left == nullptr && erase_root->right != nullptr)
+            root = root->right;
+        delete erase_root;
         return;
     }
-    else
+
+    if (erase_root->left == nullptr && erase_root->right == nullptr)
     {
-        if (node_to_delete->left || node_to_delete->right)
+        Node<T> *parent_erase = erase_root->prev;
+        if (parent_erase->left == erase_root)
+            parent_erase->left = nullptr;
+        else
+            parent_erase->right = nullptr;
+        delete erase_root;
+        return;
+    }
+
+    if (erase_root->left != nullptr && erase_root->right == nullptr)
+    {
+        Node<T> *parent_erase = erase_root->prev;
+        if (parent_erase->left == erase_root)
+            parent_erase->left = erase_root->left;
+        else
+            parent_erase->right = erase_root->left;
+        delete erase_root;
+        return;
+    }
+    if (erase_root->left == nullptr && erase_root->right != nullptr)
+    {
+        Node<T> *parent_erase = erase_root->prev;
+        if (parent_erase->left == erase_root)
+            parent_erase->left = erase_root->right;
+        else
+            parent_erase->right = erase_root->right;
+        delete erase_root;
+        return;
+    }
+    if (erase_root->left != nullptr && erase_root->right != nullptr)
+    {
+        Node<T> *min_node = find_min_in_right(erase_root->right);
+        Node<T> *parent_min_node = min_node->prev;
+        if (min_node->right == nullptr)
         {
-            if (node_to_delete->left)
-            {
-                node_to_delete->data = node_to_delete->left->data;
-                delete node_to_delete->left;
-                node_to_delete->left = nullptr;
-            }
+            erase_root->data = min_node->data;
+            if (parent_min_node->right == min_node)
+                parent_min_node->right = nullptr;
             else
-            {
-                node_to_delete->data = node_to_delete->right->data;
-                delete node_to_delete->right;
-                node_to_delete->right = nullptr;
-            }
+                parent_min_node->left = nullptr;
+            delete min_node;
             return;
         }
         else
         {
-            if (!node_to_delete->prev)
-            {
-                delete node_to_delete;
-                node_to_delete = nullptr;
-                root = node_to_delete;
-            }
+            erase_root->data = min_node->data;
+            if (parent_min_node->right == min_node)
+                parent_min_node->right = min_node->right;
             else
-            {
-                if (node_to_delete->prev->left == node_to_delete)
-                    node_to_delete->prev->left = nullptr;
-                else
-                    node_to_delete->prev->right = nullptr;
-                delete node_to_delete;
-                node_to_delete = nullptr;
-            }
+                parent_min_node->left = min_node->right;
+
+            delete min_node;
             return;
         }
     }

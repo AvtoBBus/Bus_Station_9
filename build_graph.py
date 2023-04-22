@@ -40,8 +40,8 @@ def start_create_graph(file_path_list: list):
 if __name__ == "__main__":
 
     list_of_file = [
-        "Node_fill.txt",           # если есть необходимость
-        "Node_search.txt",         # можно поменять название (путь до файла)
-        "Node_insert_erase.txt"
+        "build/Debug/Node_fill.txt",
+        "build/Debug/Node_search.txt",
+        "build/Debug/Node_insert_erase.txt"
     ]
     start_create_graph(list_of_file)
