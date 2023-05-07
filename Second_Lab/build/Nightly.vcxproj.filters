@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\miste\OneDrive\Desktop\ВАЖНОЕ\учёба\для себя\Bus_Station_9\Second_Lab\build\CMakeFiles\d2500c959d61f41c6f7746cce8e60b78\Nightly.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\miste\OneDrive\Desktop\ВАЖНОЕ\учёба\для себя\Bus_Station_9\Second_Lab\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\miste\OneDrive\Desktop\ВАЖНОЕ\учёба\для себя\Bus_Station_9\Second_Lab\build\CMakeFiles\Nightly" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{E2707A82-E7C8-354E-BF36-D20CF2F51BDC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
