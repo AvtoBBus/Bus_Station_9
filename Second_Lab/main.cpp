@@ -365,6 +365,7 @@ int main()
         cout << "    [Q]    ||   RANDOM MASS" << endl;
         cout << "    [W]    ||   SORTED MASS" << endl;
         cout << "    [E]    ||   REVERSED MASS" << endl;
+        cout << "    [R]     ||   CREATE MASS" << endl;
         cout << "    [A]    ||   START ALL TEST" << endl;
         cout << "   [Esc]   ||   EXIT" << endl;
         int key = _getch();
