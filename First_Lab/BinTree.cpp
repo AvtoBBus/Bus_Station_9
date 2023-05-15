@@ -148,30 +148,30 @@ bool BinTree<T>::contains(const Node<T> *obj)
 }
 
 template <class T>
-void BinTree<T>::erase(T data)
+bool BinTree<T>::erase(T data)
 {
     if (!root)
-        return;
+        return false;
     Node<T> *erase_root = search(data);
     if (erase_root == nullptr)
-        return;
+        return false;
     if (erase_root == root)
     {
         if (root->left == nullptr && root->right == nullptr)
         {
             root = nullptr;
-            return;
+            return true;
         }
         if (erase_root->left != nullptr && erase_root->right == nullptr)
         {
             root = root->left;
             delete erase_root;
-            return;
+            return true;
         }
         if (erase_root->left == nullptr && erase_root->right != nullptr)
             root = root->right;
         delete erase_root;
-        return;
+        return true;
     }
 
     if (erase_root->left == nullptr && erase_root->right == nullptr)
@@ -182,7 +182,7 @@ void BinTree<T>::erase(T data)
         else
             parent_erase->right = nullptr;
         delete erase_root;
-        return;
+        return true;
     }
 
     if (erase_root->left != nullptr && erase_root->right == nullptr)
@@ -193,7 +193,7 @@ void BinTree<T>::erase(T data)
         else
             parent_erase->right = erase_root->left;
         delete erase_root;
-        return;
+        return true;
     }
     if (erase_root->left == nullptr && erase_root->right != nullptr)
     {
@@ -203,7 +203,7 @@ void BinTree<T>::erase(T data)
         else
             parent_erase->right = erase_root->right;
         delete erase_root;
-        return;
+        return true;
     }
     if (erase_root->left != nullptr && erase_root->right != nullptr)
     {
@@ -217,7 +217,7 @@ void BinTree<T>::erase(T data)
             else
                 parent_min_node->left = nullptr;
             delete min_node;
-            return;
+            return true;
         }
         else
         {
@@ -228,7 +228,7 @@ void BinTree<T>::erase(T data)
                 parent_min_node->left = min_node->right;
 
             delete min_node;
-            return;
+            return true;
         }
     }
 }

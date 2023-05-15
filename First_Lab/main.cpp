@@ -10,6 +10,21 @@
 using namespace std;
 using namespace chrono;
 
+template <class T>
+T check_input()
+{
+    T number;
+    while (!(cin >> number) || (cin.peek() != '\n'))
+    {
+        cin.clear();
+        while (cin.get() != '\n')
+            ;
+        cout << "Input error! Repeat please...\n";
+        cout << "---> ";
+    }
+    return number;
+}
+
 void third_level_menu(int *choose)
 {
     while ((*choose) < 1 || (*choose) > 2)
@@ -17,7 +32,7 @@ void third_level_menu(int *choose)
         system("cls");
         cout << "Choose first or second tree? (1-fisrt, 2-second)" << endl;
         cout << "---> ";
-        cin >> (*choose);
+        (*choose) = check_input<int>();
     }
 }
 
@@ -289,11 +304,8 @@ void second_level_menu()
         {
         case 113: // q
             third_level_menu(&choose);
-            while (input < T(0))
-            {
-                cout << "Input data -> ";
-                cin >> input;
-            }
+            cout << "Input data -> ";
+            input = check_input<T>();
             if (choose == 1)
                 insert_root<T>(&first_tree, input);
             else
@@ -305,17 +317,18 @@ void second_level_menu()
         case 101: // e
             if (&first_tree.get_root() || &second_tree.get_root())
             {
+                bool result = false;
                 third_level_menu(&choose);
                 while (input < T(0))
                 {
                     cout << "Input data -> ";
-                    cin >> input;
+                    input = check_input<T>();
                 }
                 if (choose == 1)
                 {
                     try
                     {
-                        first_tree.erase(input);
+                        result = first_tree.erase(input);
                     }
                     catch (const char *error)
                     {
@@ -326,22 +339,29 @@ void second_level_menu()
                 {
                     try
                     {
-                        second_tree.erase(input);
+                        result = second_tree.erase(input);
                     }
                     catch (const char *error)
                     {
                         cout << error << endl;
                     }
                 }
+                if (result)
+                    cout << "Complite delete element" << endl;
+                else
+                    cout << "Can't delete element" << endl;
                 system("pause");
             }
             break;
         case 97: // a
-            if (&first_tree.get_root() || &second_tree.get_root())
+            if (&first_tree.get_root())
             {
                 help_root = &first_tree.get_root();
                 first_tree.clear(&help_root);
                 first_tree.set_root(help_root);
+            }
+            if (&second_tree.get_root())
+            {
                 help_root = &second_tree.get_root();
                 second_tree.clear(&help_root);
                 second_tree.set_root(help_root);
@@ -404,12 +424,18 @@ void second_level_menu()
             }
             break;
         case 27: // esc
-            help_root = &first_tree.get_root();
-            first_tree.clear(&help_root);
-            first_tree.set_root(help_root);
-            help_root = &second_tree.get_root();
-            second_tree.clear(&help_root);
-            second_tree.set_root(help_root);
+            if (&first_tree.get_root())
+            {
+                help_root = &first_tree.get_root();
+                first_tree.clear(&help_root);
+                first_tree.set_root(help_root);
+            }
+            if (&second_tree.get_root())
+            {
+                help_root = &second_tree.get_root();
+                second_tree.clear(&help_root);
+                second_tree.set_root(help_root);
+            }
             return;
         }
         input = T(-1);

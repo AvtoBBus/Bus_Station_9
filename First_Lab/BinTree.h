@@ -39,7 +39,7 @@ public:
     void print(Node<T> *root, int side, int level);
     Node<T> *search(T data);
     bool contains(const Node<T> *obj);
-    void erase(T data);
+    bool erase(T data);
     BinTree &operator=(const BinTree &obj);
     ~BinTree();
 };
