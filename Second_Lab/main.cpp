@@ -350,6 +350,104 @@ void start_all_test()
     system("pause");
 }
 
+int check_input()
+{
+    int number;
+    while (!(cin >> number) || (cin.peek() != '\n'))
+    {
+        cin.clear();
+        while (cin.get() != '\n')
+            ;
+        cout << "Input error! Repeat please...\n";
+        cout << "---> ";
+    }
+    return number;
+}
+
+void create_mass_menu()
+{
+    vector<int> mas;
+    while (true)
+    {
+        vector<int> help_vec;
+        stats result;
+        duration<float> time_result;
+        auto start = high_resolution_clock::now();
+        auto end = high_resolution_clock::now();
+        int input = 0;
+        system("cls");
+        cout << "MASS:" << endl;
+        for (int i = 0; i < mas.size(); i++)
+            cout << mas[i] << " ";
+        cout << endl;
+        cout << endl
+             << "Key Button || FUNCTION" << endl;
+        cout << "=======================" << endl;
+        cout << "    [Q]    ||   ADD ELEMENT" << endl;
+        if (mas.size() >= 2)
+            cout << "    [W]    ||   START CHANGE SORT" << endl;
+        if (mas.size() >= 2)
+            cout << "    [E]    ||   START SHELL SORT" << endl;
+        cout << "   [Esc]   ||   EXIT" << endl;
+        int key = _getch();
+        switch (key)
+        {
+        case 113: // q
+            system("cls");
+            cout << endl
+                 << "=Input number=" << endl
+                 << endl;
+            input = check_input();
+            mas.push_back(input);
+            break;
+        case 119: // w
+            system("cls");
+            cout << endl
+                 << "======START CHANGE SORT=======" << endl
+                 << endl;
+            help_vec = mas;
+            cout << "Before : ";
+            for (int i = 0; i < help_vec.size(); i++)
+                cout << help_vec[i] << " ";
+            start = high_resolution_clock::now();
+            change_sort(&help_vec, result);
+            end = high_resolution_clock::now();
+            time_result = end - start;
+            cout << endl
+                 << "After : ";
+            for (int i = 0; i < help_vec.size(); i++)
+                cout << help_vec[i] << " ";
+            cout << endl
+                 << "\n==Result==\nComprasion count = " << result.comparison_count << "\nCopy count = " << result.copy_count << "\nWork time = " << abs(time_result.count()) << endl;
+            system("pause");
+            break;
+        case 101: // e
+            system("cls");
+            cout << endl
+                 << "======START SHELL SORT=======" << endl
+                 << endl;
+            help_vec = mas;
+            cout << "Before : ";
+            for (int i = 0; i < help_vec.size(); i++)
+                cout << help_vec[i] << " ";
+            start = high_resolution_clock::now();
+            shell_sort(&help_vec, result);
+            end = high_resolution_clock::now();
+            time_result = end - start;
+            cout << endl
+                 << "After : ";
+            for (int i = 0; i < help_vec.size(); i++)
+                cout << help_vec[i] << " ";
+            cout << endl
+                 << "\n==Result==\nComprasion count = " << result.comparison_count << "\nCopy count = " << result.copy_count << "\nWork time = " << abs(time_result.count()) << endl;
+            system("pause");
+            break;
+        case 27:
+            return;
+        }
+    }
+}
+
 int main()
 {
     time_t rawtime;
@@ -365,7 +463,7 @@ int main()
         cout << "    [Q]    ||   RANDOM MASS" << endl;
         cout << "    [W]    ||   SORTED MASS" << endl;
         cout << "    [E]    ||   REVERSED MASS" << endl;
-        cout << "    [R]     ||   CREATE MASS" << endl;
+        cout << "    [R]    ||   CREATE MASS" << endl;
         cout << "    [A]    ||   START ALL TEST" << endl;
         cout << "   [Esc]   ||   EXIT" << endl;
         int key = _getch();
@@ -388,6 +486,9 @@ int main()
             cout << "=====REVERSED MASS======" << endl
                  << endl;
             show_work("reversed");
+            break;
+        case 114:
+            create_mass_menu();
             break;
         case 97:
             system("cls");
