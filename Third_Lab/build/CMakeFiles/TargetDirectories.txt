@@ -1,0 +1,9 @@
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/Experimental.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/Nightly.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/Continuous.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/NightlyMemoryCheck.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/Third_Lab.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/PACKAGE.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/RUN_TESTS.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/ZERO_CHECK.dir

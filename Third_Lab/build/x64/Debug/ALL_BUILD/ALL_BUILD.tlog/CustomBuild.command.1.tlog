@@ -1,0 +1,10 @@
+^C:\USERS\MISTE\ONEDRIVE\DESKTOP\ВАЖНОЕ\УЧЁБА\ДЛЯ СЕБЯ\BUS_STATION_9\THIRD_LAB\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab" "-BC:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build" --check-stamp-file "C:/Users/miste/OneDrive/Desktop/ВАЖНОЕ/учёба/для себя/Bus_Station_9/Third_Lab/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

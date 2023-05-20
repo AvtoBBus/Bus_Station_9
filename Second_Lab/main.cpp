@@ -28,7 +28,7 @@ void write_in_file(const char *filename, int num_of_elem, double med_comparison,
 int randomaizer(int last_x)
 {
     int x = last_x;
-    x = (1021 * x + 24631) % 116640;
+    x = (1021 * x + 24631) % 116640 - 116640 / 2;
     return x;
 }
 
