@@ -24,12 +24,13 @@ Interface::Interface(string *func_mas, int size)
     this->size = size;
 }
 
-int Interface::print_menu()
+int Interface::print_menu(string str_to_append)
 {
     Buttons buttons;
     while (true)
     {
         system("cls");
+        cout << str_to_append;
         cout << endl
              << "Key Button || FUNCTION" << endl;
         cout << "=======================" << endl;

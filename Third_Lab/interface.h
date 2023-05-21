@@ -29,5 +29,5 @@ private:
 public:
     Interface(string *func_mas, int size);
 
-    int print_menu();
+    int print_menu(string str_to_append);
 };

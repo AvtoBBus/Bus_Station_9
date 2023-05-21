@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <string>
 #include <vector>
+#include <sstream>
 #include "graph.h"
 using namespace std;
 
@@ -25,20 +26,45 @@ int Graph::find_edge(string name_from, string name_to) const
     }
     return -1;
 }
+void Graph::set_color(int index, int new_color)
+{
+    vertex[index].color = new_color;
+}
+bool Graph::check_color()
+{
+    bool all_black = true;
+    int black = 2;
+    for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
+    {
+        if (iter_v->color != black)
+            all_black = false;
+    }
+    return all_black;
+}
 
-void Graph::print_graph() const
+void Graph::clear_color()
+{
+    int white = 0;
+    for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
+        set_color(find_vertex(iter_v->name), white);
+}
+
+string Graph::print_graph()
 {
     if (!vertex.size())
         cout << "Graph is empty";
     else
     {
+        stringstream ss;
         for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
         {
-            cout << iter_v->name << "=> ";
+            ss << iter_v->name << "=> ";
             for (auto iter_e = iter_v->edges.begin(); iter_e != iter_v->edges.end(); iter_e++)
-                cout << vertex[iter_e->id_destination].name << ", ";
-            cout << endl;
+                ss << vertex[iter_e->id_destination].name << ", ";
+            ss << "\n";
         }
+        cout << ss.str() << endl;
+        return ss.str();
     }
 }
 
@@ -68,6 +94,13 @@ bool Graph::has_vertex(string name) const
     if (find_vertex(name) != -1)
         return true;
     return false;
+}
+
+void Graph::all_vertex() const
+{
+    cout << "All vertex:" << endl;
+    for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
+        cout << "(" << iter_v->name << ")" << endl;
 }
 
 void Graph::add_edge(string name_from, string name_to, double weight)
@@ -102,7 +135,7 @@ bool Graph::has_edge(string name_from, string name_to) const
         throw "Error, not found edge";
 }
 
-vector<Graph::Edge> Graph::edges(string name_from)
+void Graph::all_edges(string name_from)
 {
     if (!has_vertex(name_from))
         throw "Error, not found vertex from";
@@ -130,6 +163,23 @@ size_t Graph::degree(string name) const
 // vector<Graph::Edge> Graph::shortest_path() const
 // {
 // }
-// vector<Graph::Vertex> Graph::walk() const
-// {
-// }
+void Graph::walk(string name_from)
+{
+    if (!has_vertex(name_from))
+        throw "Error, not found vertex from";
+    int index_from = find_vertex(name_from);
+    int white = 0, gray = 1, black = 2;
+    cout << vertex[index_from].name;
+    set_color(index_from, gray);
+    for (auto iter_e = vertex[index_from].edges.begin(); iter_e != vertex[index_from].edges.end(); iter_e++)
+    {
+        if (vertex[iter_e->id_destination].color == white)
+        {
+            cout << "->";
+            walk(vertex[iter_e->id_destination].name);
+        }
+    }
+    set_color(index_from, black);
+    if (check_color())
+        clear_color();
+}
