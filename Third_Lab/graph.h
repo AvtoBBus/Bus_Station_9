@@ -48,7 +48,7 @@ public:
     void add_vertex(string name);
     void remove_vertex(string name);
     bool has_vertex(string name) const;
-    void all_vertex() const;
+    bool all_vertex() const;
 
     void add_edge(string name_from, string name_to, double weight);
     void remove_edge(string name_from, string name_to);

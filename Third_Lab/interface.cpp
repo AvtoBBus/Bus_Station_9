@@ -8,13 +8,13 @@ using namespace std;
 bool Interface::check_key(int key)
 {
     Buttons needed_buttons;
+    if (key == 27)
+        return true;
     for (int i = 0; i < this->size; i++)
     {
         if (key == needed_buttons.func_key[i])
             return true;
     }
-    if (key == 27)
-        return true;
     return false;
 }
 

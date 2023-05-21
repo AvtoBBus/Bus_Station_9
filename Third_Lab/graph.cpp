@@ -96,11 +96,14 @@ bool Graph::has_vertex(string name) const
     return false;
 }
 
-void Graph::all_vertex() const
+bool Graph::all_vertex() const
 {
+    if (!vertex.size())
+        return false;
     cout << "All vertex:" << endl;
     for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
         cout << "(" << iter_v->name << ")" << endl;
+    return true;
 }
 
 void Graph::add_edge(string name_from, string name_to, double weight)
