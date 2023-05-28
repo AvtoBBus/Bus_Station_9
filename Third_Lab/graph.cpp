@@ -1,8 +1,10 @@
 #include <iostream>
 #include <conio.h>
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <sstream>
+#include <time.h>
 #include "graph.h"
 using namespace std;
 
@@ -41,12 +43,17 @@ bool Graph::check_color()
     }
     return all_black;
 }
-
 void Graph::clear_color()
 {
     int white = 0;
     for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
         set_color(find_vertex(iter_v->name), white);
+}
+int Graph::randomaizer(int last_x) const
+{
+    int x = last_x;
+    x = (1021 * x + 24631) % 116640;
+    return x;
 }
 
 string Graph::print_graph()
@@ -60,11 +67,40 @@ string Graph::print_graph()
         {
             ss << iter_v->name << "=> ";
             for (auto iter_e = iter_v->edges.begin(); iter_e != iter_v->edges.end(); iter_e++)
-                ss << vertex[iter_e->id_destination].name << ", ";
+                ss << vertex[iter_e->id_destination].name << "(" << iter_e->weight << "), ";
             ss << "\n";
         }
         cout << ss.str() << endl;
         return ss.str();
+    }
+}
+void Graph::create_random_graph(int vertex_num)
+{
+    if (!vertex_num)
+        throw "I can't create graph with zero vertex(";
+    for (int i = 0; i < vertex_num; i++)
+    {
+        stringstream ss;
+        ss << "vertex_";
+        ss << i + 1;
+        add_vertex(ss.str());
+    }
+    srand(unsigned(time(nullptr)));
+    int val = rand() % 100;
+    int index_to = rand();
+    for (int chance = 100; chance > 0; chance /= 1.5)
+    {
+        for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
+        {
+            val = randomaizer(val);
+            if (val % 100 > (100 - chance))
+            {
+                int counter = 0;
+                index_to = randomaizer(index_to) % vertex_num;
+                if (!has_edge(iter_v->name, vertex[index_to].name))
+                    add_edge(iter_v->name, vertex[index_to].name, double((rand() % 100) + 5));
+            }
+        }
     }
 }
 
@@ -95,14 +131,14 @@ bool Graph::has_vertex(string name) const
         return true;
     return false;
 }
-
 bool Graph::all_vertex() const
 {
     if (!vertex.size())
         return false;
     cout << "All vertex:" << endl;
     for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
-        cout << "(" << iter_v->name << ")" << endl;
+        cout << "(" << iter_v->name << ") ";
+    cout << endl;
     return true;
 }
 
@@ -135,7 +171,7 @@ bool Graph::has_edge(string name_from, string name_to) const
     if (find_edge(name_from, name_to) != -1)
         return true;
     else
-        throw "Error, not found edge";
+        return false;
 }
 
 void Graph::all_edges(string name_from)
@@ -148,6 +184,12 @@ void Graph::all_edges(string name_from)
         cout << vertex[id_from].name << " --" << vertex[id_from].edges[i].weight << "--> " << vertex[vertex[id_from].edges[i].id_destination].name << endl;
 }
 
+void Graph::clear_graph()
+{
+    if (!vertex.size())
+        throw "Error, graph already empty";
+    vertex.clear();
+}
 size_t Graph::order() const
 {
     return vertex.size();
@@ -163,9 +205,41 @@ size_t Graph::degree(string name) const
     return count;
 }
 
-// vector<Graph::Edge> Graph::shortest_path() const
-// {
-// }
+int Graph::shortest_path(string name_from, string name_to) const
+{
+    const int INF = 1000000;
+    struct ed
+    {
+        int id_from, id_to;
+        double weight;
+
+        ed(int id_from, int id_to, double weight)
+        {
+            this->id_from = id_from;
+            this->id_to = id_to;
+            this->weight = weight;
+        }
+    };
+    vector<ed> all_edges;
+    for (int i = 0; i < vertex.size(); i++)
+    {
+        for (int j = 0; j < vertex[i].edges.size(); j++)
+        {
+            ed tmp(i, vertex[i].edges[j].id_destination, vertex[i].edges[j].weight);
+            all_edges.push_back(tmp);
+        }
+    }
+    vector<int> distances(vertex.size(), INF);
+    distances[find_vertex(name_from)] = 0;
+    for (int i = 0; i < distances.size() - 1; ++i)
+        for (int j = 0; j < all_edges.size(); ++j)
+            if (distances[all_edges[j].id_from] < INF)
+            {
+                if (distances[all_edges[j].id_to] > distances[all_edges[j].id_from] + all_edges[j].weight)
+                    distances[all_edges[j].id_to] = distances[all_edges[j].id_from] + all_edges[j].weight;
+            }
+    return distances[find_vertex(name_to)];
+}
 void Graph::walk(string name_from)
 {
     if (!has_vertex(name_from))

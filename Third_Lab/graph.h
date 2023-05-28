@@ -25,7 +25,6 @@ private:
         string name;
         vector<Edge> edges;
         int color; // 0-white; 1-gray; 2-black
-        string prev_vertex;
 
         Vertex(string new_name)
         {
@@ -41,9 +40,11 @@ private:
     void set_color(int index, int new_color);
     bool check_color();
     void clear_color();
+    int randomaizer(int last_x) const;
 
 public:
     string print_graph();
+    void create_random_graph(int vertex_num);
 
     void add_vertex(string name);
     void remove_vertex(string name);
@@ -53,12 +54,12 @@ public:
     void add_edge(string name_from, string name_to, double weight);
     void remove_edge(string name_from, string name_to);
     bool has_edge(string name_from, string name_to) const;
-
     void all_edges(string name_from);
 
+    void clear_graph();
     size_t order() const;
     size_t degree(string name) const;
 
-    vector<Edge> shortest_path() const;
+    int shortest_path(string name_from, string name_to) const;
     void walk(string name_from);
 };

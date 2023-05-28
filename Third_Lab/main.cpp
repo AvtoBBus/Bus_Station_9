@@ -4,7 +4,7 @@
 #include "interface.h"
 #include "graph.h"
 
-#define FUNC_SIZE 6
+#define FUNC_SIZE 9
 
 using namespace std;
 
@@ -22,36 +22,24 @@ int check_input()
     return number;
 }
 
+bool check_str_input(string input_str)
+{
+    if (input_str.size() == 0 || input_str == " ")
+        return false;
+    return true;
+}
+
 int main()
 {
     Graph graph;
-    string func_mas[FUNC_SIZE] = {"ADD VERTEX", "DELETE VERTEX", "ADD EDGE", "DELETE EDGE", "CLEAR ALL", "WALK IN GRAPH"};
+    string func_mas[FUNC_SIZE] = {"ADD VERTEX", "DELETE VERTEX", "ADD EDGE", "DELETE EDGE", "CREATE RANDOM GRAPH", "CLEAR ALL", "WALK IN GRAPH", "FIND MIN PART", "DOING TASK"};
     Interface fl_menu(func_mas, FUNC_SIZE);
     while (true)
     {
-        // string name1 = "1";
-        // string name2 = "2";
-        // string name3 = "3";
-        // string name4 = "4";
-        // string name5 = "5";
-        // string name6 = "6";
-        // string name7 = "7";
-        // graph.add_vertex(name1);
-        // graph.add_vertex(name2);
-        // graph.add_vertex(name3);
-        // graph.add_vertex(name4);
-        // graph.add_vertex(name5);
-        // graph.add_vertex(name6);
-        // graph.add_vertex(name7);
-        // graph.add_edge(name1, name2, 1.0);
-        // graph.add_edge(name1, name3, 1.0);
-        // graph.add_edge(name2, name4, 1.0);
-        // graph.add_edge(name3, name7, 1.0);
-        // graph.add_edge(name4, name6, 1.0);
-        // graph.add_edge(name2, name5, 1.0);
         int input_weight = 0;
         string input_name;
-        int flag = 0;
+        string input_name_to;
+        int flag = 97;
         if (graph.all_vertex())
             flag = fl_menu.print_menu(graph.print_graph());
         else
@@ -59,15 +47,200 @@ int main()
         if (flag == 113) // q
         {
             system("cls");
-            cout << "Input vertex name --->";
+            cout << endl;
+            cout << "Input vertex name ---> ";
             getline(cin, input_name);
-            graph.add_vertex(input_name);
+            while (!check_str_input(input_name))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name);
+            }
+            try
+            {
+                graph.add_vertex(input_name);
+            }
+            catch (const char *error)
+            {
+                cout << error;
+            }
             cout << endl;
         }
-        if (flag == 119) // e
+        if (flag == 119) // w
         {
+            system("cls");
+            cout << endl;
+            cout << "Input vertex name ---> ";
+            getline(cin, input_name);
+            while (!check_str_input(input_name))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name);
+            }
+            try
+            {
+                graph.remove_vertex(input_name);
+            }
+            catch (const char *error)
+            {
+                cout << error;
+            }
             cout << endl;
         }
+        if (flag == 101) // e
+        {
+            system("cls");
+            cout << endl;
+            cout << "Input vertex name from  ---> ";
+            getline(cin, input_name);
+            while (!check_str_input(input_name))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name);
+            }
+            cout << "Input vertex name to ---> ";
+            getline(cin, input_name_to);
+            while (!check_str_input(input_name_to))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name_to);
+            }
+            cout << "Input weight ---> ";
+            input_weight = check_input();
+            try
+            {
+                graph.add_edge(input_name, input_name_to, input_weight);
+            }
+            catch (const char *error)
+            {
+                cout << error;
+            }
+            cout << endl;
+        }
+        if (flag == 114) // r
+        {
+            system("cls");
+            cout << endl;
+            cout << "Input vertex name from  ---> ";
+            getline(cin, input_name);
+            while (!check_str_input(input_name))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name);
+            }
+            cout << "Input vertex name to ---> ";
+            getline(cin, input_name_to);
+            while (!check_str_input(input_name_to))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name_to);
+            }
+            try
+            {
+                graph.remove_edge(input_name, input_name_to);
+            }
+            catch (const char *error)
+            {
+                cout << error;
+            }
+            cout << endl;
+        }
+        if (flag == 97) // a
+        {
+            if (graph.all_vertex())
+            {
+                string func[1] = {"Clear current Graph"};
+                Interface sl_menu(func, 1);
+                int key = sl_menu.print_menu("\nGraph is not empty!\n");
+                if (key == 113)
+                {
+                    try
+                    {
+                        graph.clear_graph();
+                    }
+                    catch (const char *error)
+                    {
+                        cout << error << endl;
+                    }
+                    cout << "Graph clear" << endl;
+                    cout << "Input vertex num ---> ";
+                    int input_num = check_input();
+                    graph.create_random_graph(input_num);
+                }
+                if (key == 27)
+                    continue;
+            }
+            else
+            {
+                cout << "Input vertex num ---> ";
+                int input_num = check_input();
+                graph.create_random_graph(input_num);
+            }
+        }
+        if (flag == 115) // s
+        {
+            try
+            {
+                graph.clear_graph();
+            }
+            catch (const char *error)
+            {
+                cout << error << endl;
+            }
+        }
+        if (flag == 100) // d
+        {
+            cout << "Input start vertex name\n----> ";
+            getline(cin, input_name);
+            try
+            {
+                graph.walk(input_name);
+                cout << endl;
+            }
+            catch (const char *error)
+            {
+                cout << error << endl;
+            }
+        }
+        if (flag == 122) // z
+        {
+            system("cls");
+            cout << endl;
+            cout << "Input vertex name from  ---> ";
+            getline(cin, input_name);
+            while (!check_str_input(input_name))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name);
+            }
+            cout << "Input vertex name to ---> ";
+            getline(cin, input_name_to);
+            while (!check_str_input(input_name_to))
+            {
+                cout << endl
+                     << "Str is empty! Please repeat input ---> ";
+                getline(cin, input_name_to);
+            }
+            try
+            {
+                cout << graph.shortest_path(input_name, input_name_to) << endl;
+            }
+            catch (const char *error)
+            {
+                cout << error;
+            }
+            cout << endl;
+        }
+        if (flag == 120)
+        {
+
+        } // x
         if (flag == 27)
         {
             return 0;

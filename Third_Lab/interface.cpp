@@ -35,7 +35,7 @@ int Interface::print_menu(string str_to_append)
              << "Key Button || FUNCTION" << endl;
         cout << "=======================" << endl;
         for (int i = 0; i < this->size; i++)
-            cout << "    " << buttons.func_button[i] << "    ||    " << func_mas[i] << endl;
+            cout << "    " << buttons.func_button[i] << "    ||   " << func_mas[i] << endl;
         cout << "   [Esc]   ||   Exit" << endl;
         int key = _getch();
         if (check_key(key))
