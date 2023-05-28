@@ -62,4 +62,5 @@ public:
 
     int shortest_path(string name_from, string name_to) const;
     void walk(string name_from);
+    string find_storage();
 };

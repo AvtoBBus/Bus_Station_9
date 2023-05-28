@@ -260,3 +260,27 @@ void Graph::walk(string name_from)
     if (check_color())
         clear_color();
 }
+string Graph::find_storage()
+{
+    int storage_id = -1;
+    double min_medium_dist = INT32_MAX;
+    for (int iter_v = 0; iter_v < vertex.size(); iter_v++)
+    {
+        double counter = 0.0;
+        for (int iter = 0; iter < vertex.size(); iter++)
+        {
+            if (iter != iter_v)
+                counter += shortest_path(vertex[iter_v].name, vertex[iter].name);
+        }
+        if (counter / vertex.size() < min_medium_dist)
+        {
+            min_medium_dist = counter / vertex.size();
+            storage_id = iter_v;
+        }
+    }
+    stringstream ss;
+    ss << "\n";
+    ss << vertex[storage_id].name;
+    ss << " is storage\n";
+    return ss.str();
+}

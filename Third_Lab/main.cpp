@@ -32,7 +32,7 @@ bool check_str_input(string input_str)
 int main()
 {
     Graph graph;
-    string func_mas[FUNC_SIZE] = {"ADD VERTEX", "DELETE VERTEX", "ADD EDGE", "DELETE EDGE", "CREATE RANDOM GRAPH", "CLEAR ALL", "WALK IN GRAPH", "FIND MIN PART", "DOING TASK"};
+    string func_mas[FUNC_SIZE] = {"ADD VERTEX", "DELETE VERTEX", "ADD EDGE", "DELETE EDGE", "CREATE RANDOM GRAPH", "CLEAR ALL", "WALK IN GRAPH", "FIND MIN PART", "FIND STORAGE"};
     Interface fl_menu(func_mas, FUNC_SIZE);
     while (true)
     {
@@ -237,10 +237,10 @@ int main()
             }
             cout << endl;
         }
-        if (flag == 120)
+        if (flag == 120) // x
         {
-
-        } // x
+            cout << graph.find_storage() << endl;
+        }
         if (flag == 27)
         {
             return 0;
