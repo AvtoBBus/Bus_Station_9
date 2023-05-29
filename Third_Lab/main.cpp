@@ -39,7 +39,7 @@ int main()
         int input_weight = 0;
         string input_name;
         string input_name_to;
-        int flag = 97;
+        int flag = 0;
         if (graph.all_vertex())
             flag = fl_menu.print_menu(graph.print_graph());
         else
@@ -229,7 +229,18 @@ int main()
             }
             try
             {
-                cout << graph.shortest_path(input_name, input_name_to) << endl;
+                vector<Graph::Edge> result = graph.shortest_path(input_name, input_name_to);
+                double path_size = 0.0;
+                cout << graph.find_vertex(input_name) << "->";
+                for (auto iter = result.begin(); iter != result.end(); iter++)
+                {
+                    cout << iter->id_destination + 1;
+                    if (iter != result.end() - 1)
+                        cout << "->";
+                    path_size += iter->weight;
+                }
+                cout << endl
+                     << "Path size = " << path_size;
             }
             catch (const char *error)
             {
@@ -239,7 +250,8 @@ int main()
         }
         if (flag == 120) // x
         {
-            cout << graph.find_storage() << endl;
+            if (graph.all_vertex())
+                cout << graph.find_storage() << endl;
         }
         if (flag == 27)
         {

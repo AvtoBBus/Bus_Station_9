@@ -4,7 +4,11 @@
         "xstring": "cpp",
         "string": "cpp",
         "iosfwd": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iterator": "cpp",
+        "xutility": "cpp",
+        "initializer_list": "cpp",
+        "ostream": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
