@@ -80,7 +80,7 @@ int main()
             }
             try
             {
-                graph.remove_vertex(input_name);
+                graph.remove_vertex("vertex_1");
             }
             catch (const char *error)
             {
@@ -209,7 +209,6 @@ int main()
         }
         if (flag == 122) // z
         {
-            system("cls");
             cout << endl;
             cout << "Input vertex name from  ---> ";
             getline(cin, input_name);
@@ -231,10 +230,11 @@ int main()
             {
                 vector<Graph::Edge> result = graph.shortest_path(input_name, input_name_to);
                 double path_size = 0.0;
-                cout << graph.find_vertex(input_name) << "->";
+                cout << graph.find_vertex(input_name) + 1 << "->";
                 for (auto iter = result.begin(); iter != result.end(); iter++)
                 {
-                    cout << iter->id_destination + 1;
+                    cout
+                        << iter->id_destination + 1;
                     if (iter != result.end() - 1)
                         cout << "->";
                     path_size += iter->weight;

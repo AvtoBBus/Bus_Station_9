@@ -135,7 +135,8 @@ bool Graph::all_vertex() const
 {
     if (!vertex.size())
         return false;
-    cout << "All vertex:" << endl;
+    cout << endl
+         << "All vertex:" << endl;
     for (auto iter_v = vertex.begin(); iter_v != vertex.end(); iter_v++)
         cout << "(" << iter_v->name << ") ";
     cout << endl;
@@ -232,9 +233,7 @@ vector<Graph::Edge> Graph::shortest_path(string name_from, string name_to) const
     vector<int> distances(vertex.size(), INF);
     distances[find_vertex(name_from)] = 0;
 
-    vector<vector<ed>> paths(vertex.size());
-    paths[find_vertex(name_from)] = {};
-    int x = 0;
+    vector<vector<ed>> s_paths(distances.size());
     for (int i = 0; i < distances.size() - 1; ++i)
     {
         for (int j = 0; j < all_edges.size(); ++j)
@@ -244,7 +243,10 @@ vector<Graph::Edge> Graph::shortest_path(string name_from, string name_to) const
                 if (distances[all_edges[j].id_to] > distances[all_edges[j].id_from] + all_edges[j].weight)
                 {
                     distances[all_edges[j].id_to] = distances[all_edges[j].id_from] + all_edges[j].weight;
-                    paths[all_edges[j].id_from].push_back(all_edges[j]);
+                    if (!s_paths[all_edges[j].id_to].size())
+                        s_paths[all_edges[j].id_to].push_back(all_edges[j]);
+                    else
+                        s_paths[all_edges[j].id_to][0] = all_edges[j];
                 }
             }
         }
@@ -253,51 +255,37 @@ vector<Graph::Edge> Graph::shortest_path(string name_from, string name_to) const
     {
         if (distances[all_edges[j].id_to] > distances[all_edges[j].id_from] + all_edges[j].weight)
         {
-            throw "Error";
-        }
-    }
-    int index_start = find_vertex(name_from);
-    vector<ed> help;
-    while (index_start != find_vertex(name_to))
-    {
-        int i = 0;
-        while (i < paths.size())
-        {
-            if (paths[i].size())
-            {
-                if (paths[i][0].id_from == index_start)
-                {
-                    index_start = paths[i][0].id_to;
-                    help.push_back(paths[i][0]);
-                }
-            }
-            if (index_start == find_vertex(name_to))
-                break;
-            i += 1;
-        }
-        if (index_start != find_vertex(name_to))
-        {
-            for (int it = 0; it < help.size(); it++)
-            {
-                for (int i = 0; i < paths.size(); i++)
-                {
-                    for (int j = 0; j < paths[i].size(); j++)
-                    {
-                        if (paths[i][j].id_from == help[it].id_from && paths[i][j].id_to == help[it].id_to && paths[i][j].weight == help[it].weight)
-                            paths[i].erase(paths[i].begin() + j);
-                    }
-                }
-            }
-            help.clear();
-            index_start = find_vertex(name_from);
+            throw "Error, this graph have cicle below zero!";
         }
     }
     vector<Graph::Edge> result;
-    for (auto iter = help.begin(); iter != help.end(); iter++)
+    while (true)
     {
-        result.push_back(vertex[iter->id_from].edges[find_edge(vertex[iter->id_from].name, vertex[iter->id_to].name)]);
+        int i = 0, index_end = find_vertex(name_to);
+        while (i < s_paths.size())
+        {
+            if (s_paths[i].size())
+            {
+                if (s_paths[i][0].id_to == index_end)
+                {
+                    index_end = s_paths[i][0].id_from;
+                    if (result.size() == 0)
+                        result.push_back(vertex[s_paths[i][0].id_from].edges[find_edge(vertex[s_paths[i][0].id_from].name, vertex[s_paths[i][0].id_to].name)]);
+                    else
+                        result.insert(result.begin(), vertex[s_paths[i][0].id_from].edges[find_edge(vertex[s_paths[i][0].id_from].name, vertex[s_paths[i][0].id_to].name)]);
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
+                if (index_end == find_vertex(name_from))
+                    return result;
+            }
+            else
+                i++;
+        }
     }
-    return result;
 }
 void Graph::walk(string name_from)
 {
@@ -321,27 +309,31 @@ void Graph::walk(string name_from)
 }
 string Graph::find_storage()
 {
-    // int storage_id = -1;
-    // double min_medium_dist = INT32_MAX;
-    // for (int iter_v = 0; iter_v < vertex.size(); iter_v++)
-    // {
-    //     double counter = 0.0;
-    //     for (int iter = 0; iter < vertex.size(); iter++)
-    //     {
-    //         if (iter != iter_v)
-    //             counter += shortest_path(vertex[iter_v].name, vertex[iter].name);
-    //     }
-    //     if (counter / vertex.size() < min_medium_dist)
-    //     {
-    //         min_medium_dist = counter / vertex.size();
-    //         storage_id = iter_v;
-    //     }
-    // }
-    // stringstream ss;
-    // ss << "\n";
-    // ss << vertex[storage_id].name;
-    // ss << " is storage\n";
-    // return ss.str();
+    int storage_id = -1;
+    double min_medium_dist = INT32_MAX;
+    for (int iter_v = 0; iter_v < vertex.size(); iter_v++)
+    {
+        double counter = 0.0;
+        for (int iter = 0; iter < vertex.size(); iter++)
+        {
+            if (iter != iter_v)
+            {
+                vector<Edge> help_vec = shortest_path(vertex[iter_v].name, vertex[iter].name);
+                for (auto iter = help_vec.begin(); iter != help_vec.end(); iter++)
+                    counter += iter->weight;
+            }
+        }
+        if (counter / (vertex.size() - 1) < min_medium_dist)
+        {
+            min_medium_dist = counter / (vertex.size() - 1);
+            storage_id = iter_v;
+        }
+    }
+    stringstream ss;
+    ss << "\n";
+    ss << vertex[storage_id].name;
+    ss << " is storage\n";
+    return ss.str();
     string s = "wow";
     return s;
 }
