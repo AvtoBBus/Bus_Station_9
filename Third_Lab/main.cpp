@@ -250,8 +250,17 @@ int main()
         }
         if (flag == 120) // x
         {
-            if (graph.all_vertex())
-                cout << graph.find_storage() << endl;
+            if (!graph.empty_graph())
+            {
+                try
+                {
+                    cout << graph.find_storage() << endl;
+                }
+                catch (const char *error)
+                {
+                    cout << error << endl;
+                }
+            }
         }
         if (flag == 27)
         {

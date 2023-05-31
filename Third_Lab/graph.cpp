@@ -103,6 +103,10 @@ void Graph::create_random_graph(int vertex_num)
         }
     }
 }
+bool Graph::empty_graph() const
+{
+    return vertex.empty();
+}
 
 void Graph::add_vertex(string name)
 {
@@ -320,9 +324,17 @@ string Graph::find_storage()
         {
             if (iter != iter_v)
             {
-                vector<Edge> help_vec = shortest_path(vertex[iter_v].name, vertex[iter].name);
-                for (auto iter = help_vec.begin(); iter != help_vec.end(); iter++)
-                    counter += iter->weight;
+                try
+                {
+                    vector<Edge> help_vec = shortest_path(vertex[iter_v].name, vertex[iter].name);
+                    for (auto iter = help_vec.begin(); iter != help_vec.end(); iter++)
+                        counter += iter->weight;
+                }
+                catch (const char *error)
+                {
+                    cout << error << endl;
+                    throw "A vertex with no outgoing edges is found!";
+                }
             }
         }
         if (counter / (vertex.size() - 1) < min_medium_dist)
@@ -336,6 +348,4 @@ string Graph::find_storage()
     ss << vertex[storage_id].name;
     ss << " is storage\n";
     return ss.str();
-    string s = "wow";
-    return s;
 }

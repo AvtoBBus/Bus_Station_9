@@ -46,6 +46,7 @@ public:
     int find_vertex(string name) const;
     string print_graph();
     void create_random_graph(int vertex_num);
+    bool empty_graph() const;
 
     void add_vertex(string name);
     void remove_vertex(string name);
