@@ -208,7 +208,7 @@ size_t Graph::degree(string name) const
 
 vector<Graph::Edge> Graph::shortest_path(string name_from, string name_to) const
 {
-    const int INF = 1000000;
+    const int INF = INT32_MAX;
     struct ed
     {
         int id_from, id_to;
@@ -251,6 +251,8 @@ vector<Graph::Edge> Graph::shortest_path(string name_from, string name_to) const
             }
         }
     }
+    if (distances[find_vertex(name_to)] == INT32_MAX)
+        throw "This graph is incoherent!";
     for (int j = 0; j < all_edges.size(); ++j)
     {
         if (distances[all_edges[j].id_to] > distances[all_edges[j].id_from] + all_edges[j].weight)
